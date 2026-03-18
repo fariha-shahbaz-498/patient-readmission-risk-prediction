@@ -97,8 +97,19 @@ Predicts:
 4. Reason Prediction Model
 Random Forest Classifier
 
-Predicts admission reason code
-
+### Predicts admission reason code
+Project Structure
+readmission-risk-prediction/
+│
+├── data/raw/                # Input datasets
+├── src/
+│   ├── run_pipeline.py     # Train models
+│   └── predict.py          # Generate predictions
+│
+├── models/                 # Saved models
+├── output/                 # Results
+│
+├── README.md
  ### Model Evaluation
 Classification
 Brier Score: ~0.19
@@ -110,7 +121,20 @@ Predicts time-to-next visit (days)
 
 ✔ Calibration (Important in Healthcare)
 Ensures predicted probabilities reflect real-world likelihoods
+### Output
+output/pipeline_output.csv → Full pipeline results
 
+output/predictions.csv → Final predictions
+
+output/calibration_curve.png → Model calibration
+### Use Cases
+Hospital readmission risk prediction
+
+Resource allocation planning
+
+Preventive healthcare intervention
+
+Clinical decision support systems
  ### Risk Stratification
 Based on predicted time to next visit:
 
