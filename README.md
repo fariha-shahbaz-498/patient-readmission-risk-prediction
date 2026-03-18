@@ -1,98 +1,120 @@
-# patient-readmission-risk-prediction
-# Patient Readmission Risk Prediction
+Predicting Emergency Readmission Risk from EHR Data
+### Overview
+This project develops a complete machine learning pipeline to predict patient emergency department readmissions using synthetic Electronic Health Record (EHR) data.
 
-An end-to-end Machine Learning system for predicting hospital readmission risk using healthcare data, with explainable AI (SHAP).
+The system leverages temporal patient history, clinical measurements, and healthcare interactions to generate actionable predictions for proactive healthcare planning and resource allocation.
 
----
+### Objectives
+The project addresses three key predictive tasks:
 
-##  Features
+Classification
 
--  Predict emergency readmission risk (90 days)
--  Predict time bucket of readmission
--  Classify readmission reason (Cardiac / Non-Cardiac)
--  Explain predictions using SHAP
--  Works on small and large datasets
+Predict whether a patient will have a next emergency visit
 
----
+Output: Yes / No
 
-## 📂 Project Structure
-readmission_project/
-│
-├── data/raw/
-│ ├── patients.csv
-│ ├── encounters.csv
-│ ├── conditions.csv
-│ ├── medications.csv
-│ └── observations.csv
-│
-├── src/
-│ ├── run_pipeline.py
-│ └── predict.py
-│
-├── models/
-├── shap_outputs/
-└── README.md
+Regression
 
----
+Predict the number of days until the next emergency visit
 
-##  Installation
+Risk Stratification
 
-```bash
-pip install pandas numpy scikit-learn matplotlib shap joblib
-Run Pipeline
-python src/run_pipeline.py
-✔ Trains models
-✔ Saves models in /models
-✔ Generates SHAP plots
+Categorize patients into:
 
- Run Prediction
-python src/predict.py
-Example Output
-EMERGENCY_RISK_SCORE: 0.78
-EMERGENCY_RISK_LEVEL: HIGH
+  High Risk (0–30 days)
 
-TIME_BUCKET_PREDICTION: 2
+   Medium Risk (31–90 days)
 
-READMISSION_REASON: CARDIAC
-REASON_CONFIDENCE: 0.73
-### Features Used
-Age
+   Low Risk (90+ days)
 
-Gender
+Additional Task
 
-Total Conditions
+Predict reason code (condition associated with admission)
 
-Medications Count
+### Dataset
+Synthetic healthcare dataset inspired by EHR systems.
 
-Observations Count
+Source Files:
+patients.csv → Demographics
 
-Visit Count
+encounters.csv → Visit history (filtered to emergency only)
 
-Engineered Features:
-Visit Intensity
+observations.csv → Clinical measurements
 
-Health Burden
+medications.csv → Prescriptions
 
-Utilization Score
+conditions.csv → Diagnoses
 
-#### Model
+ ### Data Processing & Feature Engineering
+✔ Data Cleaning
+Robust datetime parsing (handles inconsistent formats)
+
+Missing value handling
+
+Emergency encounter filtering
+
+✔ Feature Engineering
+Clinical Features
+Encoded observation descriptions (DESC_CODE)
+
+Numerical clinical values (VALUE)
+
+Medication count (MED_COUNT)
+
+Condition count (COND_COUNT)
+
+  ### Temporal Features (Key Contribution)
+LAST_VISIT_GAP → Days since previous visit
+
+VISIT_LAST_30D → Visit density in last 30 days
+
+TOTAL_VISITS → Patient visit frequency
+
+These features capture patient history over time, improving predictive performance.
+
+ ### Models
+1. Classification Model
+Logistic Regression
+
+Target: NEXT_EXISTS
+
+Balanced class weights
+
+2. Regression Model
+Random Forest Regressor
+
+Target: DAYS_TO_NEXT
+
+3. Time Bucket Model
+Predicts:
+
+0 → High risk
+
+1 → Medium risk
+
+2 → Low risk
+
+4. Reason Prediction Model
 Random Forest Classifier
 
-Metrics:
+Predicts admission reason code
 
-AUROC
+ ### Model Evaluation
+Classification
+Brier Score: ~0.19
 
-AUPRC
+Calibration curve generated for probability validation
 
-Brier Score
+Regression
+Predicts time-to-next visit (days)
 
-### Explainability
-SHAP is used to:
+✔ Calibration (Important in Healthcare)
+Ensures predicted probabilities reflect real-world likelihoods
 
-Interpret predictions
+ ### Risk Stratification
+Based on predicted time to next visit:
 
-Identify important features
-
-Outputs saved in:
-
-shap_outputs/
+Risk Level	Days
+High	0–30
+Medium	31–90
+Low	90+
