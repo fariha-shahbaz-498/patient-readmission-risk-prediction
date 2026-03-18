@@ -118,3 +118,5 @@ Risk Level	Days
 High	0–30
 Medium	31–90
 Low	90+
+### Conclusion
+This project demonstrates how temporal EHR data can be transformed into meaningful predictive insights. By combining clinical features with time-based patterns, the system provides a robust and interpretable solution for healthcare risk prediction.
